@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<div id="TOC">
+<ul>
+<li><a href="#cha:introduction"><span class="toc-section-number">1</span> Introduction</a><ul>
+<li><a href="#sec:motivation"><span class="toc-section-number">1.1</span> Context and Motivation</a></li>
+<li><a href="#sec:problem"><span class="toc-section-number">1.2</span> Problem</a></li>
+<li><a href="#sec:proposed_approach"><span class="toc-section-number">1.3</span> Proposed Approach</a></li>
+<li><a href="#sec:contributions"><span class="toc-section-number">1.4</span> Goals and Expected Contributions</a></li>
+<li><a href="#sec:outline"><span class="toc-section-number">1.5</span> Outline</a></li>
+</ul></li>
+</ul>
+</div>
+<h1 id="cha:introduction"><span class="header-section-number">1</span> Introduction</h1>
+<p>This is the introductory chapter of this dissertation. The reader will be presented the context of this work, as well as the motivation that lead to the development of this thesis in Section [sec:motivation]. Section [sec:problem] will describe the problem this thesis is approaching and disclose its main goals. Furthermore, Section [sec:proposed_approach] will present the proposed approach, following the contributions of this thesis in Section [sec:contributions]. At last, Section [sec:outline] presents the remaining chapters of this dissertation.</p>
+<h2 id="sec:motivation"><span class="header-section-number">1.1</span> Context and Motivation</h2>
+<p>are a great majority of industrial equipments. They are machines that convert electrical energy into mechanical energy and they can be found in applications as diverse as industrial fans, blowers, pumps, compressors, conveyors, lifts, households appliances, power tools, etc. These motors are the central component of , which are also composed by a power supply, electric controller, mechanical transmitter and a load. In terms of electrical energy consumed, are responsible for the consumption of 30-40% of energy world wide, whereas in Developed Countries that value can reach 70-75%  <span class="citation">[1]</span> - making them one of the most important types of electrical loads. Therefore, even small increases in the efficiency of will have a very significant impact in the reduction of energy consumption.</p>
+<p>Looking to the landscape of types in the Industry, the most used kind is the due to its relative low cost, good efficiency and high availability - representing about 85-90% of the installed in the industry <span class="citation">[1]</span>. These motors have a life expectancy of 12 to 20 years, in which they are repaired typically 2 to 4 times. Moreover, they consume energy in such a way that its energy consumption can cost up to 200 times their startup cost - being this energy consumption the exploration cost of an . Both startup cost and exploration cost are part of the , being the maintenance cost and the exploration cost the most expensive ones in the  <span class="citation">[1]</span> (this subject is further discussed in section [sec:Three_phase_induction_motors_maintenance_and_lyfe_cycle]). One aspect that is related to both costs is the quality of the maintenance, which is directly related to the motor’s efficiency and availability.</p>
+<p>Although the probability of breakdowns of is very low (discussed in section [subsec:motor_failures]), there are constant concerns with high availability and reliability of the motors. In an assembly line, if an fails unexpectedly, not only is that failure a cost, it can also provoke another failure elsewhere in the - or in the systems that depends of its mechanical work - and it can also mean that the whole assembly line may be stopped. The costs associated to these unexpected failures are called the outage costs. Then again, one aspect that can minimize these occurrences is the quality of the maintenance. Therefore, the investment in maintenance practices that improve the efficiency and availability of is very attractive to the Industry.</p>
+<p>There are maintenance practices that allow the improvement of the efficiency and availability of , like preventive maintenance and predictive maintenance. Predictive Maintenance is a type of maintenance whose goal is to provide timely malfunction signals of the motors’ status, minimizing the probability of an outage. On the other hand, if the malfunctions are detected in an early stage then the repair actions tend to be less costly, not only because it is possible to timely plan the repair, as well as the malfunction tend to stay contained to its original location, not spreading to other parts of the motor.</p>
+<p>In the datification era in which we live and given the acceptance of by the industries, there is the possibility to have a solution that relies on a proper trained model that uses the online data provided by sensors to provide insights. With an infrastructure of this nature, it would be possible not only to predict failures (within an confidence interval) as well as give real time insights of the ’ status. With this insights and predicted failures, it would led to an improvement of efficiency and availability, reduction in exploration costs, reduction in maintenance costs and a greater security in the decision-making process for maintenance.</p>
+<p>In this context, Altran Portugal company has a project (REARM) where the main objective is to build a predictive maintenance platform for electric motors, providing insights as well as failures detection and predictions. For this project, a partnership between Altran Portugal and Optisigma is in progress. This partnership is important since Optisigma has a device that can monitor and provide a set of useful real-time data to apply methods of . They have already installed the device in several factories, which are already collecting online data. Furthermore, with this partnership, it will be possible to mount an experimental test bench in which the faults can be induced so that several failures patterns can be studied.</p>
+<p>Due to economical and practical reasons, the low power are the target motor category, with motors having 400V, 4 poles, 50Hz - which are the most used.</p>
+<p>For purposes of this dissertation’s work, a specific set of problems will be addressed and analyzed for further implementation.</p>
+<h2 id="sec:problem"><span class="header-section-number">1.2</span> Problem</h2>
+<p>One major source of faults are the stator winding short-circuits (referred in section [subsec:motor_failures] as turn insulation and grounding insulation). These faults can form 26% of the faults occurring in electrical machines (refereed in page table [tab:failure_distribution_drilldown]), and in small machines can go up to 90%, and is the most common electrical problem  <span class="citation">[2]</span>. These faults are typically the final result of the winding insulation’s aging. An aged winding can locally fail due to a small stress, generating an interturn short-circuit - thus permitting fault current to circulate through the short-circuited turns. This fault creates a thermal effect that leads to a progressive degradation of the affected turns’ insulation and its neighboring turns. These events’ course lead to a progressive spread of the fault, increasing fault’s current and even to an insulation fault of another phase. The insulation fault on a phase can lead to a phase-to-phase or phase-to-ground failure  <span class="citation">[2]</span>. These kind of failures demand for timely appropriated measures that must be detected very quickly for any practical use, when the fault current remains low or before the conventional protection systems act (overcurrent or differential relays)  <span class="citation">[2]</span>.</p>
+<p>For the presented reasons, the problem this dissertation proposes to address is the timely detection of turn insulation faults in using the stator’s current signature.</p>
+<h2 id="sec:proposed_approach"><span class="header-section-number">1.3</span> Proposed Approach</h2>
+<p>Regarding turn insulation failures, there are a set of works where techniques are used with other conventional techniques to detect short-circuited faults  <span class="citation">[3]–[11]</span>, and another set of works that uses machine learning to detect short-circuited as well as other faults  <span class="citation">[12]–[16]</span>.</p>
+<p>This dissertation will follow the methodology (discussed in section [sec:crispdm]), where the first phase of this dissertation was the study of three phase induction motors and related problems, so that one of them could be chosen and further study.</p>
+<p>The data understanding will be followed by an iterative study of signal processing, data stream methods and machine learning techniques, so that features can be derived and models can be compared. For the modeling, machine learning techniques will be studied and applied. After the evaluation phase of the most promising models, the process may be re-iterated. Still, a prototype is expected as a result of this dissertation.</p>
+<p>A complete description on the approach can be found in chapter [cha:available_data].</p>
+<h2 id="sec:contributions"><span class="header-section-number">1.4</span> Goals and Expected Contributions</h2>
+<p>The goal of this dissertation is to present a machine learning model which is capable of detect incipient turn insulation fault in real time. To do so, related works and techniques will be searched and several machine learning techniques will be implemented and compared. As a final result, a prototype of an online real-time stream system able to detect early turn insulation faults is expected.</p>
+<p>It is expected that these goals bring the following contributions:</p>
+<ul>
+<li><p>Develop a model that can detect early inter-turn short circuited faults, as well as other short-circuited faults, through the stator current;</p></li>
+<li><p>Compare several transforms and signal processing techniques, being one of them the sparse fast Fourier transform  <span class="citation">[17], [18]</span>;</p></li>
+<li><p>Compare the quality of fault detection at several frequency resolutions;</p></li>
+<li><p>Identify the machine learning techniques which provides better results for online near real-time detection of turn insulation faults.</p></li>
+</ul>
+<h2 id="sec:outline"><span class="header-section-number">1.5</span> Outline</h2>
+<p>The rest of the document is organized as follows:</p>
+<p><strong>Chapter</strong> [cha:intro_electric_motors] - - presents the basics concepts when addressing three phase induction motors, covering three phase circuits, working principle of induction motors and common failures - which was the result of the business understanding phase. In spite of the section’s size, it gives context and introduces the subject to the reader, and therefore it was important not to summarize too much. If the reader is someone in context of these topics, this chapter can be skipped.</p>
+<p><strong>Chapter</strong> [cha:state_of_the_art] - - presents conventional methods used on turn insulation fault detection as well as other methods where machine learning have been used.</p>
+<p><strong>Chapter</strong> [cha:available_data] - - presents the work plan for this dissertation following the methodology, as well as a summary on the available data.</p>
+<div id="refs" class="references">
+<div id="ref-Ferreira1">
+<p>[1] F. J. T. E. Ferreira and S. Cruz, “Visão geral sobre selecção , controlo e manutenção de motores de indução trifásicos,” <em>Manutenção</em>, vol. 101, pp. 46–53, 2009. </p>
+</div>
+<div id="ref-Riera-Guasp2015">
+<p>[2] M. Riera-Guasp, J. A. Antonino-Daviu, and G.-A. Capolino, “Advances in Electrical Machine, Power Electronic, and Drive Condition Monitoring and Fault Detection: State of the Art,” <em>IEEE Transactions on Industrial Electronics</em>, vol. 62, no. 3, pp. 1746–1759, 2015 [Online]. Available: <a href="http://www.scopus.com/inward/record.url?eid=2-s2.0-84923164518{\&amp;}partnerID=tZOtx3y1" class="uri">http://www.scopus.com/inward/record.url?eid=2-s2.0-84923164518{\&amp;}partnerID=tZOtx3y1</a></p>
+</div>
+<div id="ref-Cheng2011">
+<p>[3] S. Cheng, P. Zhang, and T. G. Habetler, “An impedance identification approach to sensitive detection and location of stator turn-to-turn faults in a closed-loop multiple-motor drive,” <em>IEEE Transactions on Industrial Electronics</em>, vol. 58, no. 5, pp. 1545–1554, 2011. </p>
+</div>
+<div id="ref-Joksimovic2013">
+<p>[4] G. M. Joksimovic, J. Riger, T. M. Wolbank, N. Peric, and M. Vasak, “Stator-current spectrum signature of healthy cage rotor induction machines,” <em>IEEE Transactions on Industrial Electronics</em>, vol. 60, no. 9, pp. 4025–4033, 2013. </p>
+</div>
+<div id="ref-Cruz2001">
+<p>[5] S. M. A. Cruz and A. J. Marques Cardoso, “Stator winding fault diagnosis in three-phase synchronous and asynchronous motors, by the extended park’s vector approach,” <em>IEEE Transactions on Industry Applications</em>, vol. 37, no. 5, pp. 1227–1233, 2001. </p>
+</div>
+<div id="ref-Cabanas2013">
+<p>[6] M. F. Cabanas, J. G. Norniella, M. G. Melero, C. H. Rojas, J. M. Cano, F. Pedrayes, and G. A. Orcajo, “Detection of stator winding insulation failures: On-line and off-line tests,” <em>Proceedings - 2013 IEEE Workshop on Electrical Machines Design, Control and Diagnosis, WEMDCD 2013</em>, pp. 210–219, 2013. </p>
+</div>
+<div id="ref-Gandhi2011">
+<p>[7] A. Gandhi, S. Member, T. Corrigan, S. Member, L. Parsa, and S. Member, “Recent Advances in Modeling and Online Detection of Stator Interturn Faults in Electrical Motors,” vol. 58, no. 5, pp. 1564–1575, 2011. </p>
+</div>
+<div id="ref-Kia2013">
+<p>[8] S. H. Kia, H. Henao, and G.-A. Capolino, “Efficient digital signal processing techniques for induction machines fault diagnosis,” <em>2013 IEEE Workshop on Electrical Machines Design, Control and Diagnosis (WEMDCD)</em>, pp. 232–246, 2013 [Online]. Available: <a href="http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=6525183" class="uri">http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=6525183</a></p>
+</div>
+<div id="ref-M.a2014">
+<p>[9] S. M.a, G. A.b, G. S.a, and Z. S.E.a, “Detection of inter-turn short-circuit in induction motors using Park-Hilbert method,” <em>International Journal of Systems Assurance Engineering and Management</em>, vol. 5, no. 3, pp. 337–351, 2014 [Online]. Available: <a href="http://www.scopus.com/inward/record.url?eid=2-s2.0-84940298650{\&amp;}partnerID=40{\&amp;}md5=05aa03feecb31fd4f16ea68570058dd8" class="uri">http://www.scopus.com/inward/record.url?eid=2-s2.0-84940298650{\&amp;}partnerID=40{\&amp;}md5=05aa03feecb31fd4f16ea68570058dd8</a></p>
+</div>
+<div id="ref-Bouzid2013">
+<p>[10] M. B. K. Bouzid and G. Champenois, “New expressions of symmetrical components of the induction motor under stator faults,” <em>IEEE Transactions on Industrial Electronics</em>, vol. 60, no. 9, pp. 4093–4102, 2013. </p>
+</div>
+<div id="ref-Bakhri2012">
+<p>[11] S. Bakhri, N. Ertugrul, and W. Soong, “Negative Sequence Current Compensation for Stator Shorted Tum Detection in Induction Motors,” no. 2, pp. 1921–1926, 2012. </p>
+</div>
+<div id="ref-Ourici2012">
+<p>[12] A. Ourici and A. Ouari, “Park ’ s Vector Approach to detect an inter turn stator fault in a doubly fed induction machine by a neural network,” pp. 25–32, 2012. </p>
+</div>
+<div id="ref-Toma2011">
+<p>[13] S. Toma, L. Capocchi, and G. A. Capolino, “Wound Rotor Induction Generator Inter-Turn Short-Circuits Diagnosis Using a New Digital Neural Network,” no. c, pp. 1–10, 2011. </p>
+</div>
+<div id="ref-Wolkiewicz2013">
+<p>[14] M. Wolkiewicz and C. T. Kowalski, “On-line neural network-based stator fault diagnosis system of the converter-fed induction motor drive,” <em>IECON Proceedings (Industrial Electronics Conference)</em>, pp. 5561–5566, 2013. </p>
+</div>
+<div id="ref-Patel2016">
+<p>[15] R. A. Patel and B. R. Bhalja, “Condition Monitoring and Fault Diagnosis of Induction Motor Using Support Vector Machine,” <em>Electric Power Components and Systems</em>, vol. 44, no. 6, pp. 683–692, 2016 [Online]. Available: <a href="http://www.tandfonline.com/doi/full/10.1080/15325008.2015.1131762" class="uri">http://www.tandfonline.com/doi/full/10.1080/15325008.2015.1131762</a></p>
+</div>
+<div id="ref-Jagadanand2015">
+<p>[16] G. Jagadanand and F. L. Dias, “ARM based induction motor fault detection using wavelet and support vector machine,” <em>Signal Processing, Informatics, Communication and Energy Systems (SPICES), 2015 IEEE International Conference on</em>, pp. 1–4, 2015. </p>
+</div>
+<div id="ref-Indyk2014">
+<p>[17] P. Indyk and M. Kapralov, “Sample-Optimal Fourier Sampling in Any Constant Dimension – Part I,” no. 1, 2014 [Online]. Available: <a href="http://arxiv.org/abs/1403.5804" class="uri">http://arxiv.org/abs/1403.5804</a></p>
+</div>
+<div id="ref-Hassanieh2014">
+<p>[18] H. Hassanieh, L. Shi, O. Abari, E. Hamed, and D. Katabi, “GHz-wide sensing and decoding using the sparse Fourier transform,” <em>Proceedings - IEEE INFOCOM</em>, pp. 2256–2264, 2014. </p>
+</div>
+</div>
+</body>
+</html>
