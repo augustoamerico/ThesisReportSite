@@ -358,7 +358,11 @@ div.tocify {
 <div id="intro" class="section level1">
 <h1><span class="header-section-number">1</span> Intro</h1>
 <p>Data represents the log of the real-world execution, and the way we log influences directly what we see in data and what we decide based on the generated data. One step for a better understanding of the world is to try to see the world as data so that we can apply a set of methods to that data, and this process is not objective at all!</p>
-<p>There are <strong>uncertainty</strong> and <strong>randomness</strong> in this process and we can separate their root in two sources: - The process itself - The data collection methods</p>
+<p>There are <strong>uncertainty</strong> and <strong>randomness</strong> in this process and we can separate their root in two sources:</p>
+<ul>
+<li>The process itself</li>
+<li>The data collection methods</li>
+</ul>
 <p>Once we have all the data, we need a way to look at that same info - which can have millions or billions of transactions. Mainly, we need to understand what that data is tracing and we need to understand the process that generated it.</p>
 <p>To do so, we use statistical estimators to simplify those traces into something more comprehensible that somehow captures it all in a much more concise way.</p>
 <p>The overall process of getting the data from the world, and then going from the data to the world is the field of <strong>Statistical Inference</strong>.</p>
@@ -369,17 +373,70 @@ div.tocify {
 <h1><span class="header-section-number">2</span> Why do we need to simplify the data we get in the era of the <a href="https://www.cs.rit.edu/~ark/bcbd/">Big CPU, Big Data</a> ?</h1>
 <p>In other words: Why do we need to sampling if we can process everything?</p>
 <p>Well, first of all <strong>not always we can process everything</strong>. Often, we have to get insights about the data and we will need to get a sample from the data to get some info. Sometimes we need to sample because of hardware limitations, sometimes we look to the data we have as a sample and not a population (imagine a census survey about the population of United States… Do we really have time to get ALL the data?), sometimes because we want to process a set of insights and we need it asap (then again, hardware limitations and time/resources limitations).</p>
-<p>And with this comes de <strong>sample distribution uncertainty</strong> (more about that, next).</p>
-<p>So, given this, sometimes we must make assumptions about the data we are working on. How much data you need will depend on the work you are performing.</p>
+<p>And with this the <strong>sample distribution uncertainty</strong> emerges (more about that, next). This is importante since what we would like to get from our data <em>aka</em> sample distribution is the required data to awnser questions about individuals that are not in our data <em>aka</em> sample distribution - and to get this done means to know the Population distribution.</p>
+<p>So, given this, sometimes we must make <strong>assumptions</strong> about the data we are working on. How much data you need will depend on the work you are performing.</p>
 <hr />
 </div>
 <div id="population-and-samples" class="section level1">
 <h1><span class="header-section-number">3</span> Population and Samples</h1>
-<p>Let’s think about Squirrel-Cage Induction Motors with 400v, 50Hz, 3kW, 1440 rpm and 6.15 A. Yup, is a specific subset of low-power Squirrel Cage Induction Motors. Imagine that we have information about a lot of these running motors where a sensor was monitoring the motor vibration, the three-phase voltages and the three-phase currents at a rate of 1000 times per seconds (1Khz)</p>
-<p>Now, image that at one given day We can catalog ALL the data about running motors of the target kind. If none of the motors would never run again, I would say that my data represented a Population. But since the data is always on changing in the sense that more data is being added, what we really want is to get info about the process that led to those measures values. In other words, since we have a sample of a larger distribution (the population distribution), we want to get insights on that population distribution so that we can esstimate future cases.</p>
+<p>Let’s think about Squirrel-Cage Induction Motors with 400v, 50Hz, 3kW, 1440 rpm and 6.15 A. Yup, is a specific subset of low-power Squirrel Cage Induction Motors. Imagine that we have information about a lot of these running motors where a sensor was monitoring the motor vibration, the three-phase voltages and the three-phase currents at a rate of 1000 times per seconds (1Khz).</p>
+<p>This means that at each second, we would have more 1000 tuples of information with the following schema:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center"><strong>Feature</strong></th>
+<th align="center"><strong>Unit</strong></th>
+<th align="center"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">current phase R</td>
+<td align="center">Ampere</td>
+<td align="center">Stator line current of phase R</td>
+</tr>
+<tr class="even">
+<td align="center">current phase S</td>
+<td align="center">Ampere</td>
+<td align="center">Stator line current of phase S</td>
+</tr>
+<tr class="odd">
+<td align="center">current phase T</td>
+<td align="center">Ampere</td>
+<td align="center">Stator line current of phase T</td>
+</tr>
+<tr class="even">
+<td align="center">voltage RS</td>
+<td align="center">Volt</td>
+<td align="center">Stator line-to-line voltage between phase R and S</td>
+</tr>
+<tr class="odd">
+<td align="center">voltage ST</td>
+<td align="center">Volt</td>
+<td align="center">Stator line-to-line voltage between phase S and T</td>
+</tr>
+<tr class="even">
+<td align="center">voltage TR</td>
+<td align="center">Volt</td>
+<td align="center">Stator line-to-line voltage between phase S and T</td>
+</tr>
+<tr class="odd">
+<td align="center">vibration</td>
+<td align="center">kHertz</td>
+<td align="center">Vibration of the motor</td>
+</tr>
+</tbody>
+</table>
+<p>Now, image that at one given day We could catalog ALL the data about running motors of the target kind. If none of the motors would never run again, I would say that my data represented a Population. But since the data is always on changing in the sense that more data is being added, what we really want is to get info about the process that led to those measures values. In other words, since we have a sample of a larger distribution (the population distribution) and we want to get insights on that population distribution - which can be seens as the All Mighty process for data generation about a certain population - so that we can estimate future cases. To do so, we use <strong>statistical estimators</strong> to estimate the behaviour of <a href="https://en.wikipedia.org/wiki/Random_variable">stochastic (random) variables</a>.</p>
 <div id="what-is-the-population-distribution" class="section level2">
 <h2><span class="header-section-number">3.1</span> What is the population distribution</h2>
 <p>The population distribution is the pattern or set of patters / parameters that we see in a population. Given a Population, we can discover what kind of distribution it takes: A <a href="https://en.wikipedia.org/wiki/Normal_distribution">gaussian distribution</a>, a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">poisson distribution</a>, a <a href="https://en.wikipedia.org/wiki/Bernoulli_distribution">bernoulli distribution</a>, <a href="https://en.wikipedia.org/wiki/List_of_probability_distributions">etc</a>.</p>
+<p>Now let’s assume that our sample of Induction Motors was generated from a Parent All Might Process that takes a known distribution - for example, let’s assume that takes the Gaussian distribution.</p>
+<p>We know that the Gaussian distribution is defined by the following parameters:</p>
+<ul>
+<li>Î¼ (mean)</li>
+<li>Ïƒ2 (variance)</li>
+</ul>
 <p>Given a distribution of a population, we can know the parameters of that population: <strong>mean</strong>, <strong>variance</strong>, <strong>covariance</strong>, <strong>standard deviation</strong>, <strong>percentiles</strong>, etc.</p>
 </div>
 <div id="what-is-the-sample-distribution-and-what-about-its-uncertainty" class="section level2">
